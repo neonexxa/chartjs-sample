@@ -111,6 +111,75 @@
                 }
             }
         };
+        var config2 = {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: "PH",
+                    fill: false,
+                    backgroundColor: window.chartColors.blue,
+                    borderColor: window.chartColors.blue,
+                    data: [
+                        
+                    ],
+                }, {
+                    label: "Turbidity",
+                    fill: false,
+                    backgroundColor: window.chartColors.green,
+                    borderColor: window.chartColors.green,
+                    borderDash: [5, 5],
+                    data: [
+                        
+                    ],
+                }, {
+                    label: "Temperature",
+                    backgroundColor: window.chartColors.red,
+                    borderColor: window.chartColors.red,
+                    data: [
+                        
+                    ],
+                    fill: false,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                title:{
+                    display:true,
+                    text:'Device ID : FXRD3214'
+                },
+                tooltips: {
+                    mode: 'index',
+                    intersect: false,
+                },
+                hover: {
+                    mode: 'nearest',
+                    intersect: true
+                },
+                scales: {
+                    // xAxes: [{
+                    //     display: true,
+                    //     scaleLabel: {
+                    //         display: true,
+                    //         labelString: 'Time'
+                    //     }
+                    // }],
+                    yAxes: [{
+                        display: true,
+                        ticks: {
+					        beginAtZero:true,
+					        min: 0,
+					        max: 100  
+					      },
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Value'
+                        }
+                    }]
+                }
+            }
+        };
   //       function addData(chart, label, data, sensorlabel) {
 		//     chart.data.labels.push(label);
   // 			chart.data.labels.splice(0, 1);
@@ -161,12 +230,39 @@
 			    // console.log(realvalue);
 			});
 		}
+		function chart2(canvasid,firebaseref,maxyaxis,){
+			var ctx2 = document.getElementById(canvasid).getContext("2d");
+            var myLine2 = new Chart(ctx2, config2);
+            var datacol2 = config2.data.labels;
+            
+            config2.options.scales.yAxes[0].ticks.max = maxyaxis;
+            config2.options.title.text = 'Device ID : '+firebaseref;
+            var timelabel2 = '';
+            // sending to firebase
+			var alldata2 = firebase.database().ref(firebaseref);
+			alldata2.on('child_added', function(rtdata) {
+				var realvalue2 = rtdata.val().value.split(" ");
+				timelabel2 = realvalue2[3]+" "+realvalue2[4];
+
+				// removing the previous data
+				if (datacol2.length > 9) {
+		  			myLine2.data.labels.splice(0, 1);
+				    myLine2.data.datasets.forEach((dataset) => {
+				    	dataset.data.splice(0, 1);
+				    });
+			  	}
+
+			  	// add the 11th data
+				addlatestData(myLine2,[timelabel2],[realvalue2[0],realvalue2[1],realvalue2[2]]);
+			    // console.log(realvalue);
+			});
+		}
         window.onload = function() {
    //      	$('.chartjs-hidden-iframe').remove();
 			// $('#chartjs-canvas').remove();
 			// $('.chart').html('<canvas id="chartjs-canvas" height="300"></div>');
-            chart1("canvas","FXRD3214",100);
-            chart1("canvas2","FXRD7791",1000);
+            chart1("canvas","FXRD3214",50);
+            chart2("canvas2","FXRD7791",1200);
         };
     </script>
 </body>
