@@ -4,6 +4,9 @@
 <head>
     <title>Line Styles</title>
     <!-- <script src="http://www.chartjs.org/dist/2.7.1/Chart.bundle.js"></script> -->
+    <!-- Compiled and minified CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
     <script src="./script.js"></script>
     <style>
@@ -26,6 +29,10 @@
     </div>
     <!-- <button onclick="test()"> haha</button> -->
 
+<!-- Compiled and minified JavaScript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+
 <script src="https://www.gstatic.com/firebasejs/4.6.0/firebase.js"></script>
 <script>
   // Initialize Firebase
@@ -38,9 +45,17 @@
     messagingSenderId: "1003624334259"
   };
   firebase.initializeApp(config);
+  var error = firebase.database().ref("error");
+  error.on('value', function(errordata) {
+  				if (errordata.val() != "ok") {
+  					Materialize.toast(errordata.val(), 8000);	
+  				}
+				
+			});
+
 </script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    
     <script>
         var config = {
             type: 'line',
